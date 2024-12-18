@@ -28,10 +28,26 @@ pipeline {
             }
           }
           steps{
+            // Just a comment, if we use # inside sh it will comment the line and pass it to the next command
             sh '''
-              test -f ./build/index.html
+              #test -f ./build/index.html
               npm ci
               npm test
+            '''
+          }
+        }
+         stage('E2E'){
+          agent{
+            docker{
+              image 'mcr.microsoft.com/playwright:v1.49.1-noble'
+              reuseNode true
+            }
+          }
+          steps{
+            sh '''
+                npm install serve
+                node_modules\\serve -s build
+                npx playwright test
             '''
           }
         }
