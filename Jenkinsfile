@@ -20,13 +20,15 @@ pipeline {
                 '''
             }
         }
-        stage('Test'){
-          agent{
-            docker{
-              image 'node:18-alpine'
-              reuseNode true
-            }
-          }
+        stage('Run in parallel'){
+          parallel{
+            stage('Test'){
+              agent{
+                docker{
+                  image 'node:18-alpine'
+                  reuseNode true
+                }
+              }
           steps{
             // Just a comment, if we use # inside sh it will comment the line and pass it to the next command
             sh '''
@@ -45,13 +47,17 @@ pipeline {
           }
           steps{
             sh '''
-                npm install serve
-                node_modules\\serve -s build &
-                sleep 10
-                npx playwright test --reporter=html
+                echo "salam"
+                #npm install serve
+                #node_modules\\serve -s build &
+                #sleep 10
+                #npx playwright test --reporter=html
             '''
           }
         }
+          }
+        }
+        
     }
 
     post{
